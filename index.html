@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字数カウント - Premium Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, #1a1a2e 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, #16213e 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, #0f3460 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            z-index: -2;
+        }
+
+        /* Particle effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00d4ff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp 15s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(0) scale(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.1);
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Glowing title */
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff, #00d4ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 3s ease infinite;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+            letter-spacing: -2px;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Glass morphism card */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Textarea with neon glow */
+        .textarea-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            max-height: 250px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            color: #ffffff;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5),
+                        inset 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Futuristic button */
+        .button-wrapper {
+            text-align: center;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 18px 60px;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            border: none;
+            border-radius: 50px;
+            color: #000000;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .reset-button {
+            background: linear-gradient(135deg, #ff0080, #ff00d4);
+            box-shadow: 0 10px 30px rgba(255, 0, 128, 0.3);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.5);
+        }
+
+        .reset-button:hover {
+            box-shadow: 0 15px 40px rgba(255, 0, 128, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Result display with animation */
+        .result {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .count-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .count-display {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #00d4ff; /* Fallback for browsers that don't support background-clip */
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            animation: pulse 2s ease infinite;
+            display: inline-block; /* Important for gradient text */
+        }
+
+        .count-display.secondary {
+            background: linear-gradient(135deg, #ffffff, #ff00d4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #ff00d4; /* Fallback color */
+            text-shadow: 0 0 30px rgba(255, 0, 212, 0.5);
+            animation-delay: 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .count-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .count-display {
+                font-size: 3rem;
+            }
+            
+            button {
+                padding: 15px 40px;
+                font-size: 16px;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <h1>文字数カウント</h1>
+        
+        <div class="card">
+            <div class="textarea-wrapper">
+                <textarea id="textInput" placeholder="ここにテキストを貼り付けてください..."></textarea>
+            </div>
+            
+            <div class="button-wrapper">
+                <button id="countButton" onclick="countCharacters()">カウント</button>
+                <button id="resetButton" onclick="resetAll()" class="reset-button">リセット</button>
+            </div>
+            
+            <div class="loading" id="loading"></div>
+            
+            <div class="result" id="result">
+                <div class="count-item">
+                    <div class="count-display" id="countDisplay">0</div>
+                    <div class="count-label">文字（改行含む）</div>
+                </div>
+                <div class="count-item">
+                    <div class="count-display secondary" id="countDisplayNoBreaks">0</div>
+                    <div class="count-label">文字（改行除く）</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create particle effect
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Reset function
+        function resetAll() {
+            const textInput = document.getElementById('textInput');
+            const countDisplay = document.getElementById('countDisplay');
+            const countDisplayNoBreaks = document.getElementById('countDisplayNoBreaks');
+            const result = document.getElementById('result');
+            
+            // Add fade out effect
+            result.style.transition = 'all 0.3s ease';
+            result.classList.remove('show');
+            
+            // Clear text and reset counts
+            setTimeout(() => {
+                textInput.value = '';
+                countDisplay.textContent = '0';
+                countDisplayNoBreaks.textContent = '0';
+                textInput.focus();
+            }, 300);
+        }
+
+        // Count characters function
+        function countCharacters() {
+            const textInput = document.getElementById('textInput');
+            const countDisplay = document.getElementById('countDisplay');
+            const countDisplayNoBreaks = document.getElementById('countDisplayNoBreaks');
+            const result = document.getElementById('result');
+            const loading = document.getElementById('loading');
+            const button = document.getElementById('countButton');
+            
+            // Show loading animation
+            loading.style.display = 'block';
+            button.disabled = true;
+            result.classList.remove('show');
+            
+            // Simulate processing time for effect
+            setTimeout(() => {
+                const text = textInput.value;
+                const count = text.length;
+                const countNoBreaks = text.replace(/\r?\n/g, '').length;
+                
+                // Animate number counting
+                animateCount(count, countDisplay);
+                animateCount(countNoBreaks, countDisplayNoBreaks);
+                
+                // Hide loading and show result
+                loading.style.display = 'none';
+                button.disabled = false;
+                result.classList.add('show');
+            }, 500);
+        }
+
+        // Animate counting effect
+        function animateCount(target, element) {
+            const duration = 1000;
+            const increment = target / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+        }
+
+        // Real-time character count (optional enhancement)
+        document.getElementById('textInput').addEventListener('input', function() {
+            const result = document.getElementById('result');
+            if (result.classList.contains('show')) {
+                const text = this.value;
+                const count = text.length;
+                const countNoBreaks = text.replace(/\r?\n/g, '').length;
+                document.getElementById('countDisplay').textContent = count.toLocaleString();
+                document.getElementById('countDisplayNoBreaks').textContent = countNoBreaks.toLocaleString();
+            }
+        });
+
+        // Initialize particles on load
+        window.addEventListener('load', createParticles);
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    </script>
+</body>
+</html>
